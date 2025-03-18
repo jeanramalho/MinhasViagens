@@ -27,6 +27,21 @@ class HomeViewController: UIViewController {
     }
     
     private func setup(){
+        
+        setupContentView()
+        setupNavigationBar()
+        setHierarchy()
+        setConstraints()
+    }
+    
+    private func setupContentView(){
+        contentView.viagensTableView.delegate = self
+        contentView.viagensTableView.dataSource =  self
+        
+        contentView.viagensTableView.register(ViagensTableViewCell.self, forCellReuseIdentifier: ViagensTableViewCell.identifier)
+    }
+    
+    private func setupNavigationBar(){
         self.title = "Minhas Viagens"
         
         //configura layout da navigationBar
@@ -36,8 +51,12 @@ class HomeViewController: UIViewController {
             navBarlayout.configureWithOpaqueBackground()
             navBarlayout.backgroundColor = .blue
             
-            //configura cor do título
-            navBarlayout.titleTextAttributes = [.foregroundColor: UIColor.white]
+            // Configurar cor e TAMANHO do título
+            let fontAttributes = [
+                NSAttributedString.Key.foregroundColor: UIColor.white,
+                NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 22)
+                   ]
+            navBarlayout.titleTextAttributes = fontAttributes
             
             //aplica a aparencia em todos os estados da navigationBar
             navigationBar.standardAppearance = navBarlayout
@@ -49,8 +68,6 @@ class HomeViewController: UIViewController {
         }
         
         self.navigationItem.rightBarButtonItem = addButton
-        setHierarchy()
-        setConstraints()
     }
     
     private func setHierarchy(){
@@ -72,4 +89,18 @@ class HomeViewController: UIViewController {
         let mapaVC = MapaViewController()
         self.navigationController?.pushViewController(mapaVC, animated: true)
     }
+}
+
+extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 20
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ViagensTableViewCell.identifier, for: indexPath) as? ViagensTableViewCell else {return UITableViewCell()}
+        cell.viagemLabel.text = "texto testando"
+        return cell
+    }
+    
+    
 }
