@@ -19,7 +19,8 @@ class HomeView: UIView {
     }
     
     private func setupUI(){
-
+        
+        backgroundColor = .white
         setHierarchy()
         setConstraints()
     }

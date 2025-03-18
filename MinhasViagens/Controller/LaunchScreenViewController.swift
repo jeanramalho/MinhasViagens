@@ -18,6 +18,7 @@ class LaunchScreenViewController: UIViewController {
     
     private func setup(){
         
+        showHomeView()
         setHierarchy()
         setConstraints()
     }
@@ -35,5 +36,12 @@ class LaunchScreenViewController: UIViewController {
             contentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             contentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
+    }
+    
+    private func showHomeView(){
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {[weak self] in
+            let homeView = HomeViewController()
+            self?.navigationController?.setViewControllers([homeView], animated: true)
+        }
     }
 }

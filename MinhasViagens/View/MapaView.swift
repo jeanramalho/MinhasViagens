@@ -20,6 +20,7 @@ class MapaView: UIView {
     
     private func setupUI(){
         
+        backgroundColor = .gray
         setHierarchy()
         setConstraints()
     }
