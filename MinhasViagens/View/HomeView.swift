@@ -1,5 +1,5 @@
 //
-//  LauchScreenView.swift
+//  HomeView.swift
 //  MinhasViagens
 //
 //  Created by Jean Ramalho on 18/03/25.
@@ -7,8 +7,8 @@
 import Foundation
 import UIKit
 
-class LauchScreenView:UIView {
-    
+class HomeView: UIView {
+ 
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -19,7 +19,7 @@ class LauchScreenView:UIView {
     }
     
     private func setupUI(){
-        
+
         setHierarchy()
         setConstraints()
     }
@@ -29,6 +29,8 @@ class LauchScreenView:UIView {
     }
     
     private func setConstraints(){
-        
+        NSLayoutConstraint.activate([
+
+        ])
     }
 }
