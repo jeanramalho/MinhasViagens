@@ -9,12 +9,12 @@ import UIKit
 
 class ViagensTableViewCell: UITableViewCell {
     
-    lazy var miniLogoImageView: UIImageView = {
+    lazy var mapPinImageView: UIImageView = {
         let image = UIImageView()
         image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFit
-        image.image = UIImage(named: "logo")
-        image.backgroundColor = .blue
+        image.image = UIImage(systemName: "mappin.and.ellipse")
+        image.tintColor = .red
         return image
     }()
     
@@ -45,20 +45,20 @@ class ViagensTableViewCell: UITableViewCell {
     }
     
     private func setHierarchy(){
-        contentView.addSubview(miniLogoImageView)
+        contentView.addSubview(mapPinImageView)
         contentView.addSubview(viagemLabel)
     }
     
     private func setConstraints(){
         NSLayoutConstraint.activate([
-            miniLogoImageView.topAnchor.constraint(equalTo: topAnchor, constant: 4),
-            miniLogoImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 6),
-            miniLogoImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
-            miniLogoImageView.widthAnchor.constraint(equalToConstant: 60),
-            miniLogoImageView.heightAnchor.constraint(equalToConstant: 80),
+            mapPinImageView.topAnchor.constraint(equalTo: topAnchor, constant: 4),
+            mapPinImageView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 6),
+            mapPinImageView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
+            mapPinImageView.widthAnchor.constraint(equalToConstant: 60),
+
             
             
-            viagemLabel.leadingAnchor.constraint(equalTo: miniLogoImageView.trailingAnchor, constant: 8),
+            viagemLabel.leadingAnchor.constraint(equalTo: mapPinImageView.trailingAnchor, constant: 8),
             viagemLabel.topAnchor.constraint(equalTo: topAnchor, constant: 4),
             viagemLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -4),
             viagemLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -4),
