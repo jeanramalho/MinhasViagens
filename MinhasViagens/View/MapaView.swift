@@ -6,8 +6,15 @@
 //
 import Foundation
 import UIKit
+import MapKit
 
 class MapaView: UIView {
+    
+    lazy var mapView: MKMapView =  {
+        let mapView = MKMapView()
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        return mapView
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -26,10 +33,15 @@ class MapaView: UIView {
     }
     
     private func setHierarchy(){
-        
+        addSubview(mapView)
     }
     
     private func setConstraints(){
-        
+        NSLayoutConstraint.activate([
+            mapView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            mapView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            mapView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            mapView.bottomAnchor.constraint(equalTo: bottomAnchor),
+        ])
     }
 }
