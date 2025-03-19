@@ -17,9 +17,13 @@ class MapaViewController: UIViewController {
     }
     
     private func setup(){
-        
+        setupNavigationBar()
         setHierarchy()
         setConstraints()
+    }
+    
+    private func setupNavigationBar(){
+        self.title = "Mapa"
     }
     
     private func setHierarchy(){
