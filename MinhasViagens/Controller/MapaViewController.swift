@@ -12,6 +12,7 @@ class MapaViewController: UIViewController {
     
     let contentView: MapaView = MapaView()
     var locationManager = CLLocationManager()
+    private let viagensDataBase = ViagensModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,6 +20,8 @@ class MapaViewController: UIViewController {
     }
     
     private func setup(){
+        
+        mapAddGesture()
         
         setupLocation()
         setupNavigationBar()
@@ -57,7 +60,7 @@ extension MapaViewController: MKMapViewDelegate, CLLocationManagerDelegate {
         
     }
     
-    private func mapAddMark(){
+    private func mapAddGesture(){
         let mapa = contentView.mapView
         //cria objeto que reconhece o toque longo
         let getGesture = UILongPressGestureRecognizer(target: self, action: #selector(mapMark(gesture: )))
@@ -71,13 +74,50 @@ extension MapaViewController: MKMapViewDelegate, CLLocationManagerDelegate {
     @objc private func mapMark(gesture: UIGestureRecognizer){
         
         let contentMapa = contentView.mapView
+        var localCompleto = "Endereço não encontrado!"
         
         // tratamento para capturar o gesto apenas quando ele inicia
         if gesture.state == UIGestureRecognizer.State.began {
+            
             //pega o local onde foi clicado no mapa
             let selectedPoint = gesture.location(in: contentMapa)
             //converte o ponto clicado no mapa para coordenadas
-            let coordinates = contentMapa.convert(selectedPoint, toCoordinateFrom: <#T##UIView?#>)
+            let coordinates = contentMapa.convert(selectedPoint, toCoordinateFrom: contentMapa)
+            //pega localizacao para recuperar o endereco do local selecionado
+            let location = CLLocation(latitude: coordinates.latitude, longitude: coordinates.longitude)
+            
+            //Transforma localizacao em endereco
+            CLGeocoder().reverseGeocodeLocation(location) { Local, erro in
+                if erro == nil {
+                    
+                    if let localData = Local?.first {
+                        if let localName = localData.name {
+                            localCompleto = localName
+                        } else {
+                            if let endereco = localData.thoroughfare {
+                                localCompleto = endereco
+                            }
+                        }
+                    }
+                    
+                    //exibe a anotacao com os dados de endereço
+                    let annotation = MKPointAnnotation()
+                    annotation.coordinate.latitude = coordinates.latitude
+                    annotation.coordinate.longitude = coordinates.longitude
+                    annotation.title = localCompleto
+                    
+                    self.contentView.mapView.addAnnotation(annotation)
+                    let titleAnnotation = String(annotation.title ?? "")
+                    self.viagensDataBase.salvarViagem(viagem: titleAnnotation)
+                } else {
+                    print("Erro ao encontrar localização: \(String(describing: erro))")
+                }
+                
+            }
+            
+        
+            
+            
         }
     }
     

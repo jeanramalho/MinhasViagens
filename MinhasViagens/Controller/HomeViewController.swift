@@ -10,6 +10,7 @@ import UIKit
 class HomeViewController: UIViewController {
     
     let contentView: HomeView = HomeView()
+    private let viagensDataBase = ViagensModel()
     
     lazy var addButton: UIBarButtonItem = {
         let button = UIBarButtonItem()
@@ -24,6 +25,10 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        contentView.viagensTableView.reloadData()
     }
     
     private func setup(){
@@ -93,14 +98,19 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
+        return viagensDataBase.listarViagens().count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ViagensTableViewCell.identifier, for: indexPath) as? ViagensTableViewCell else {return UITableViewCell()}
-        cell.viagemLabel.text = "texto testando"
+        cell.viagemLabel.text = viagensDataBase.listarViagens()[indexPath.row]
         return cell
     }
     
-    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            viagensDataBase.deletarViagem(index: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
 }
