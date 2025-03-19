@@ -10,19 +10,21 @@ import UIKit
 class ViagensModel {
     
     let chave: String = "viagens"
-    var viagens: [String] = []
+    var viagens: [Dictionary<String, String>] = []
+    var viagem: Dictionary<String, String> = [:]
     
-    func salvarViagem(viagem: String){
+    func salvarViagem(viagem: Dictionary<String, String>){
         
         viagens = listarViagens()
         
         viagens.append(viagem)
         UserDefaults.standard.set(viagens, forKey: chave)
+        UserDefaults.standard.synchronize()
     }
     
-    func listarViagens() -> [String]{
+    func listarViagens() -> [Dictionary<String, String>]{
         if let dados = UserDefaults.standard.object(forKey: chave) {
-            return dados as? [String] ?? []
+            return dados as? [Dictionary<String, String>] ?? []
         } else {
             return []
         }
@@ -33,5 +35,6 @@ class ViagensModel {
         
         viagens.remove(at: index)
         UserDefaults.standard.set(viagens, forKey: chave)
+        UserDefaults.standard.synchronize()
     }
 }

@@ -13,6 +13,7 @@ class MapaViewController: UIViewController {
     let contentView: MapaView = MapaView()
     var locationManager = CLLocationManager()
     private let viagensDataBase = ViagensModel()
+    var viagem: Dictionary<String, String> = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -107,8 +108,9 @@ extension MapaViewController: MKMapViewDelegate, CLLocationManagerDelegate {
                     annotation.title = localCompleto
                     
                     self.contentView.mapView.addAnnotation(annotation)
-                    let titleAnnotation = String(annotation.title ?? "")
-                    self.viagensDataBase.salvarViagem(viagem: titleAnnotation)
+                    self.viagem = ["local": localCompleto, "latitude": String(coordinates.latitude), "longitude": String(coordinates.longitude)]
+                    
+                    self.viagensDataBase.salvarViagem(viagem: self.viagem)
                 } else {
                     print("Erro ao encontrar localização: \(String(describing: erro))")
                 }

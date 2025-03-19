@@ -103,7 +103,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ViagensTableViewCell.identifier, for: indexPath) as? ViagensTableViewCell else {return UITableViewCell()}
-        cell.viagemLabel.text = viagensDataBase.listarViagens()[indexPath.row]
+        cell.viagemLabel.text = viagensDataBase.listarViagens()[indexPath.row]["local"]
         return cell
     }
     
