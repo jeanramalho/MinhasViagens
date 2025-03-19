@@ -6,8 +6,9 @@
 //
 import Foundation
 import UIKit
+import MapKit
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, CLLocationManagerDelegate {
     
     let contentView: HomeView = HomeView()
     private let viagensDataBase = ViagensModel()
@@ -17,7 +18,7 @@ class HomeViewController: UIViewController {
         button.image = UIImage(systemName: "plus")
         button.style = .plain
         button.target = self
-        button.action = #selector(showMapaView)
+        button.action = #selector(addButtonAction)
         button.tintColor = .white
         return button
     }()
@@ -90,16 +91,31 @@ class HomeViewController: UIViewController {
         ])
     }
     
-    @objc private func showMapaView(){
+    
+    @objc private func showMapaView(latitude: String?, longitude: String?, title: String?){
         let mapaVC = MapaViewController()
-        self.navigationController?.pushViewController(mapaVC, animated: true)
+        if (latitude != nil) && (longitude != nil) {
+            mapaVC.viagemLati = CLLocationDegrees(latitude ?? "")
+            mapaVC.viagemLongi = CLLocationDegrees(longitude ?? "")
+            mapaVC.addAnnotation(latiParametro: CLLocationDegrees(latitude ?? ""), longiParametro: CLLocationDegrees(longitude ?? ""), annotationTitle: title ?? "")
+            self.navigationController?.pushViewController(mapaVC, animated: true)
+        } else {
+            self.navigationController?.pushViewController(mapaVC, animated: true)
+        }
+        
+    }
+    
+    @objc private func addButtonAction(){
+        showMapaView(latitude: nil, longitude: nil, title: nil)
     }
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viagensDataBase.listarViagens().count
     }
+    
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ViagensTableViewCell.identifier, for: indexPath) as? ViagensTableViewCell else {return UITableViewCell()}
@@ -107,10 +123,20 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     
+    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             viagensDataBase.deletarViagem(index: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
+    
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let latitude = viagensDataBase.listarViagens()[indexPath.row]["latitude"]
+        let longitude = viagensDataBase.listarViagens()[indexPath.row]["longitude"]
+        let title = viagensDataBase.listarViagens()[indexPath.row]["local"]
+        showMapaView(latitude: latitude, longitude: longitude, title: title)
+    }
+    
 }

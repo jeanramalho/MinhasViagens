@@ -15,6 +15,10 @@ class MapaViewController: UIViewController {
     private let viagensDataBase = ViagensModel()
     var viagem: Dictionary<String, String> = [:]
     
+    var viagemLati: CLLocationDegrees?
+    var viagemLongi: CLLocationDegrees?
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
@@ -101,13 +105,8 @@ extension MapaViewController: MKMapViewDelegate, CLLocationManagerDelegate {
                         }
                     }
                     
-                    //exibe a anotacao com os dados de endereço
-                    let annotation = MKPointAnnotation()
-                    annotation.coordinate.latitude = coordinates.latitude
-                    annotation.coordinate.longitude = coordinates.longitude
-                    annotation.title = localCompleto
-                    
-                    self.contentView.mapView.addAnnotation(annotation)
+                    self.addAnnotation(latiParametro: coordinates.latitude, longiParametro: coordinates.longitude, annotationTitle: localCompleto)
+                 
                     self.viagem = ["local": localCompleto, "latitude": String(coordinates.latitude), "longitude": String(coordinates.longitude)]
                     
                     self.viagensDataBase.salvarViagem(viagem: self.viagem)
@@ -121,6 +120,43 @@ extension MapaViewController: MKMapViewDelegate, CLLocationManagerDelegate {
             
             
         }
+    }
+    
+    func addAnnotation(latiParametro: CLLocationDegrees?, longiParametro: CLLocationDegrees?, annotationTitle: String){
+        //exibe a anotacao com os dados de endereço
+        let annotation = MKPointAnnotation()
+        annotation.coordinate.latitude = latiParametro ?? 0
+        annotation.coordinate.longitude = longiParametro ?? 0
+        annotation.title = annotationTitle
+        
+        self.contentView.mapView.addAnnotation(annotation)
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        let mapa = contentView.mapView
+        
+        
+        if (self.viagemLati != nil) && (self.viagemLongi != nil) {
+            
+            guard let latitude = self.viagemLati else {return}
+            guard let longitude = self.viagemLongi else {return}
+            
+            let region = MKCoordinateRegion(center: CLLocationCoordinate2DMake(latitude, longitude), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+            
+            mapa.setRegion(region, animated: true)
+            
+        } else {
+            
+            mapa.showsUserLocation = true
+            
+            guard let userLocation = locations.last else {return}
+            
+            let region = MKCoordinateRegion(center: CLLocationCoordinate2DMake(userLocation.coordinate.latitude, userLocation.coordinate.longitude), span: MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01))
+            
+            mapa.setRegion(region, animated: true)
+        }
+        
     }
     
 }

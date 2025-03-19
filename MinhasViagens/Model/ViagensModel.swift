@@ -11,7 +11,6 @@ class ViagensModel {
     
     let chave: String = "viagens"
     var viagens: [Dictionary<String, String>] = []
-    var viagem: Dictionary<String, String> = [:]
     
     func salvarViagem(viagem: Dictionary<String, String>){
         
